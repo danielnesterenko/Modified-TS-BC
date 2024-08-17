@@ -131,7 +131,7 @@ class LatentSpaceMineCLIP:
         np.save(latents_file, latents)
 
     @torch.no_grad()
-    def train_episode(self, mineclip_model, frames, vid_id, save_dir='weights/ts_bc/latents_mineclip/'):
+    def train_episode(self, mineclip_model, frames, vid_id):
         episode_latents = []
 
         resized_frames = np.empty((frames.shape[0], AGENT_RESOLUTION[1], AGENT_RESOLUTION[0], 3), dtype=np.uint8)
@@ -142,17 +142,33 @@ class LatentSpaceMineCLIP:
         sliding_window_frames = sliding_window_view(resized_frames, SLIDING_WINDOW_SIZE, 0)
         sliding_window_frames = torch.tensor(np.transpose(sliding_window_frames, (0, 4, 3, 2, 1)))
 
-        inter_batch_size = 100
+        inter_batch_size = 1
         for i in range(sliding_window_frames.shape[0] // inter_batch_size + 1):
             inter_batch_frames = sliding_window_frames[i*inter_batch_size:(i+1)*inter_batch_size].to(self.device)
 
             latents = mineclip_model.encode_video(inter_batch_frames)
-            
-            episode_latents += [latent.astype('float16') for latent in latents.to('cpu').numpy()]
 
+            latents, latent_patch_embeddings = latents
+            latents = latents.to('cpu').numpy().astype('float16')
+            latent_patch_embeddings = latent_patch_embeddings.to('cpu').numpy().astype('float16')
+
+            emb_idx = list(range(latent_patch_embeddings.shape[0]))
+            emb_idx_16 = emb_idx[15::16]
+
+            for j in range(latents.shape[0]):
+                latent_to_save = latents[j]
+                patch_embedding_to_save = latent_patch_embeddings[emb_idx_16[j]]
+                episode_latents.append((latent_to_save, patch_embedding_to_save))
+
+            if i % 100 == 0:
+                print(f'{i} batches encoded')
+            
             del(inter_batch_frames)
+
+        print(f'### Encoded {len(episode_latents)} embeddings.')
+        print(f'### MineCLIP + patch embedding finished for video: {vid_id}.')
         
-        np.save(save_dir + vid_id.rsplit('/', 1)[-1], np.array(episode_latents))
+        np.save('./weights/ts_bc/latents_mineclip_patches/' + vid_id.rsplit('/', 1)[-1], np.array(episode_latents))
 
     def get_distances(self, latent):
         return self.distance_function(self.latents, latent)
