@@ -1,0 +1,1 @@
+Download 'attn.pth' from https://drive.google.com/file/d/1uaZM1ZLBz2dZWcn85rZmjP7LV6Sg5PZW/view and put inside this folder.

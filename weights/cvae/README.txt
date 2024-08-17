@@ -1,0 +1,1 @@
+Download 'steve1_prior.pt' from https://drive.google.com/uc?id=1OdX5wiybK8jALVfP5_dEo0CWm9BQbDES and put inside this folder.
