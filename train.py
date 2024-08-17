@@ -18,7 +18,7 @@ def main(args):
     dataset = VPTDataset()
 
     episode_actions = EpisodeActions()
-    latent_space_vpt = LatentSpaceVPT()
+    #latent_space_vpt = LatentSpaceVPT() not needed?
     latent_space_mineclip = LatentSpaceMineCLIP()
 
     vpt_model = load_vpt()
