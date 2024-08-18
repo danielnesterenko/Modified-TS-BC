@@ -1,6 +1,9 @@
 # Modified TS-BC
 Modified TS-BC is a modification of the Targeted Search-Based Behavioral Cloning model for playing Minecraft.
-It looks for the most similar situation in relation to a prompted goal between the agent and a demonstration dataset, by comparing embeddings of different embedding spaces
+It looks for the most similar situation in relation to a prompted goal between the agent and a demonstration dataset, by comparing embeddings of different embedding spaces.
+
+See [thesis_presentation_modified_tsbc.pptx](https://github.com/user-attachments/files/16648347/thesis_presentation_modified_tsbc.pptx) for additional information.
+
 
 ## Disclaimer
 This project is a modification of [TS-BC](https://pages.github.com/]https://github.com/JulianBvW/TS-BC).
@@ -39,5 +42,14 @@ and is for academic reasons only.
 
 ## Run the Agent
 * Model has only been ran on headless machines. The following instructions therefore are for headless machines only. Removing the prefix `xvfb-run -a` might enable the model to run on a machine with head.
-* Run the agent on goals & seeds defined within `run_batch_analysis.py` by `xvfb-run -a python run_batch_analysis.py`. After finishing its video footage will be placed inside output/agent_recordings.
-* To make frame comparisons based on the VAE-embedding space run `xvfb-run -a python rank_latents.py`. After finishing the results will be placed inside output/frame_comparisons/situational_similarity.
+* Run the agent on goals & seeds defined within `run_batch_analysis.py` by `xvfb-run -a python run_batch_analysis.py`. After finishing, its video footage will be placed inside output/agent_recordings.
+* To make frame comparisons based on the VAE-embedding space run `xvfb-run -a python rank_latents.py`. After finishing, the results will be placed inside output/frame_comparisons/situational_similarity.
+
+
+## Expected Results
+
+* VAE similarity search, displaying the demonstrations of lowest (left) and highest similarity (right) based on the observation (top): ![523_good](https://github.com/user-attachments/assets/ba286e2a-c18b-4d4b-b77c-4c62cdfb656f)
+* Screencapture of moment where agent (left) switches from navigation to execution mode based on demonstration (right) patch embeddings similarity: 
+![Figure23](https://github.com/user-attachments/assets/120d52bb-8eae-419d-b548-f556e1cd7f6d)
+
+
