@@ -8,7 +8,7 @@ See [thesis_presentation_modified_tsbc.pptx](https://github.com/user-attachments
 ## Disclaimer
 
 It utilizes parts of the following projects:
-* [TS-BC](https://pages.github.com/]https://github.com/JulianBvW/TS-BC).
+* [TS-BC](https://pages.github.com/]https://github.com/JulianBvW/TS-BC)
 * [MineCLIP](https://github.com/MineDojo/MineDojo)
 * [MineRL](https://github.com/minerllabs/minerl)
 * [STEVE-1](https://github.com/Shalev-Lifshitz/STEVE-1)
