@@ -1,5 +1,4 @@
-dataset/data/10.0/*
-dataset/data/depth_videos/*
+
 __pycache__
 weights/ts_bc/*
 weights/pretrained_vae
