@@ -5,3 +5,4 @@ weights/pretrained_vae
 weights/mineclip
 weights/cvae
 MineCLIP/*/__pycache__
+output/*

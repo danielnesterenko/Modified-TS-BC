@@ -3,19 +3,14 @@ import cv2
 import torch
 import minerl
 import argparse
+import sys
 from tqdm import tqdm
 from DepthAnythingImpl import DepthAnythingImpl
 from minerl.herobraine.env_specs.human_survival_specs import HumanSurvival
 
 from programmatic_eval import ProgrammaticEvaluator
 from distance_fns import DISTANCE_FUNCTIONS
-#from TargetedSearchAgent import TargetedSearchAgent
-#from TargetedSearchAgent_RESNET import TargetedSearchAgent
-#from TargetedSearchAgent_DinoV2 import TargetedSearchAgent
-#from TargetedSearchAgent_DinoV2_EveryFrame import TargetedSearchAgent
-#from TargetedSearchAgent_DepthVAE import TargetedSearchAgent
-#from TargetedSearchAgent_DepthVAE_spatial import TargetedSearchAgent
-from TargetedSearchAgent_DepthVAE_Spatial_Patches_Final import TargetedSearchAgent
+from ModifiedTSBC import TargetedSearchAgent
 
 ENV_KWARGS = dict(
     fov_range=[70, 70],

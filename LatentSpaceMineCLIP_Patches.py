@@ -4,7 +4,6 @@ from tqdm import tqdm
 import sys
 import numpy as np
 from numpy.lib.stride_tricks import sliding_window_view
-#from mineclip import MineCLIP
 from MineCLIP.mineclip.mineclip import MineCLIP
 import torch.nn.functional as F
 

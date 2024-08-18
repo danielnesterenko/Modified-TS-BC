@@ -14,21 +14,13 @@ class EpisodeActions:
     @torch.no_grad()
     def load(self, search_folder='weights/ts_bc/', N=20):
         action_files = os.listdir(search_folder + 'actions/')
-        latents_vpt_files = os.listdir(search_folder + 'latents_vpt')
-        latents_mineclip_files = os.listdir(search_folder + 'latents_mineclip')
-        latents_resnet_files = os.listdir(search_folder + 'latents_resnet')
-        latents_dinov2_files = os.listdir(search_folder + 'latents_dinov2')
+        latents_mineclip_files = os.listdir(search_folder + 'latents_mineclip_patches')
+        latents_vae_files = os.listdir(search_folder + 'latents_4x4x8_128')
 
         print('Found:')
         print(f'   Action Files: {len(action_files)}')
-        print(f'   VPT Files:    {len(latents_vpt_files)}')
-        print(f'   MCLIP Files:  {len(latents_mineclip_files)}')
-        print(f'   ResNet Files:  {len(latents_resnet_files)}')
-        print(f'   DinoV2 Files:  {len(latents_dinov2_files)}')
-
-        # Filter out corrupted indexing files
-        action_files = [af for af in action_files if af in latents_vpt_files and af in latents_mineclip_files and af in latents_resnet_files and af in latents_dinov2_files]
-        print(f'After filtering: {len(action_files)}')
+        print(f'   MCLIP  Files:  {len(latents_mineclip_files)}')
+        print(f'   VAE    Files:  {len(latents_vae_files)}')
 
         # Sample latents if wanted
         if N > 0:

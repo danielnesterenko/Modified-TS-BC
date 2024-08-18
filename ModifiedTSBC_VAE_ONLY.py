@@ -11,13 +11,12 @@ import os
 from VPTDataset import VPTDataset
 from CVAE import load_cvae
 from EpisodeActions import EpisodeActions
-from LatentSpaceMineCLIP_test_patches import LatentSpaceMineCLIP, load_mineclip, SLIDING_WINDOW_SIZE
+from LatentSpaceMineCLIP_Patches import LatentSpaceMineCLIP, load_mineclip, SLIDING_WINDOW_SIZE
 from LatentSpaceDepthVAE import LatentSpaceDepthVAE, AGENT_RESOLUTION
 from evaluation_utils import frames_until_window_min, map_found_latents_to_videos, calculate_episode_start
 import util_functions
 
-sys.path.append('./VAE/')  # Add the parent directory to the Python path
-import z_build_latent_space_vae as VAE
+import VAE.build_latent_space_vae as VAE
 
 transform = transforms.Compose([
     transforms.ToTensor(),
@@ -174,48 +173,19 @@ class TargetedSearchAgent():
             agreed_patches_per_traj.append(agreed_patches)
 
         patch_agreement_count = 13
-        #print(similarity_count)
-        print(np.max(similarity_count))
         if np.max(similarity_count) >= patch_agreement_count:
+            #print(f'### Matching patches: {np.max(similarity_count)}')
+            print('### Execution mode triggered.')
             agreed_patches = agreed_patches_per_traj[int(np.argmax(similarity_count))] # patches that exceeded threshold of all patches from mask
             top_x_indices = np.argsort(similarity_count)[-3:][::-1]
             #print('TOP X')
-            #print(top_x_indices) # indeces of top x trajectories from prefiltered list containing indices of top traj. from all traj.
-            self.create_frame_comparison(top_x_indices, rgb_obs, agreed_patches, seed)
+            #print(f'Goal-trajectory indices: {top_x_indices}') # indeces of top x trajectories from prefiltered list containing indices of top traj. from all traj.
+            self.create_frame_comparison(top_x_indices, rgb_obs, agreed_patches, seed) # creates frame comparison on moment when execution mode was triggered.
 
             return True, self.latent_space_mineclip.min_indices[top_x_indices]
         else:
             return False, self.latent_space_mineclip.min_indices
-
-    '''
-    def evaluate_masked_similarity_OLD(self, obs_masked, rgb_obs, seed):
-        #print('compute masked similaritys')
-        similarities = []
-        goal_traj_masked = self.latent_space_mineclip.goal_trajectories_patches_masked
-
-        for i in range(goal_traj_masked.shape[0]):
-            goal_traj_masked_i = goal_traj_masked[i]
-            cos_sim = F.cosine_similarity(obs_masked, goal_traj_masked_i, dim=-1) # maybe instead of mean check for x% of patches having 0.9 or sth.
-            similarities.append(cos_sim.mean().item())  # Mean Similarity across all patches - just quick prototype, might chose patches on different criteria later
-
-        # Convert to a tensor for easier manipulation
-        similarities = torch.tensor(similarities)
-        #sorted_t, _ = torch.sort(similarities)
         
-        print(similarities.max())
-        if similarities.max() >= self.clip_sim_threshold:
-            # COULD BUILD FRAME COMP HERE
-            print('EXECUTE')
-            print(similarities.max())
-            _, top_k_indices = torch.topk(similarities, 3) # ADJUST SIZE OF SEARCH DICT, top_k_indeces = idx of top frame of x prefiltered frames, e.g. [0, 150]
-            print('TOP K')
-            print(top_k_indices)
-            self.create_frame_comparison(top_k_indices, rgb_obs, seed)
-
-            return True, self.latent_space_mineclip.min_indices[top_k_indices]
-        else:
-            return False, self.latent_space_mineclip.min_indices
-    '''
 
     def create_frame_comparison(self, goal_indeces, rgb_obs, agreed_patches, seed):
         dataset = VPTDataset()
@@ -233,22 +203,21 @@ class TargetedSearchAgent():
         for frame in range(len(search_ranking_dict)):
             vid, _, name = dataset.get_from_vid_id(search_ranking_dict[frame][2])
             demonstration = vid[search_ranking_dict[frame][0]]
-
-            #cv2.putText(rgb_obs, f'Rank: {frame + 1}', (10, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1, cv2.LINE_AA)
-            #cv2.putText(rgb_obs, f'Num patches in mask: {self.latent_space_mineclip.num_goal_patches_mask}', (10, 40), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1, cv2.LINE_AA)
-            #cv2.putText(rgb_obs, f'Execution threshhold: {self.clip_sim_threshold}', (10, 60), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1, cv2.LINE_AA)
-            #cv2.putText(demonstration, f"Video: {search_ranking_dict[frame][2].rsplit('/', 1)[-1]}", (10, 80), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1, cv2.LINE_AA)
             
+            '''
+            can be utilized to draw patches over frame comparison, however its unsure if the positions are correct.
+
             if frame == 0:
                 obs_patch_img, dem_patch_img = self.draw_patches_on_img(rgb_obs, demonstration, agreed_patches)
                 patches_hstacked = np.hstack((obs_patch_img, dem_patch_img))
-                cv2.imwrite(f'./output/search_analysis/rankings/frame_comparison_MineCLIP_Patches/frame_comparison_{seed}_{self.count_clip_searches}_patches.png', cv2.cvtColor(patches_hstacked, cv2.COLOR_RGB2BGR))
+                cv2.imwrite(f'./output/frame_comparisons/execution_mode/executionModeTrigger_patches_{seed}_{self.count_clip_searches}.png', cv2.cvtColor(patches_hstacked, cv2.COLOR_RGB2BGR))
+            '''
 
             frames_hstacked.append(np.hstack((rgb_obs, demonstration)))
             
 
         frames_vstacked = np.vstack(frames_hstacked) 
-        cv2.imwrite(f'./output/search_analysis/rankings/frame_comparison_MineCLIP_Patches/frame_comparison_{seed}_{self.count_clip_searches}.png', cv2.cvtColor(frames_vstacked, cv2.COLOR_RGB2BGR))
+        cv2.imwrite(f'./output/frame_comparisons/execution_mode/executionModeTrigger_{seed}_{self.count_clip_searches}.png', cv2.cvtColor(frames_vstacked, cv2.COLOR_RGB2BGR))
         self.count_clip_searches += 1
 
 
@@ -335,19 +304,6 @@ class TargetedSearchAgent():
         latent = VAE.encode_frame(frame_preprocessed)
         latent = latent.squeeze(0)
         latent = latent.detach().numpy()
-
-        # Saving Image for later comparison in result directory
-        '''
-        z = VAE.model.reparameterize(torch.tensor(latent[0]), torch.tensor(latent[1]))
-        decoded = [VAE.model.decode(z), input, torch.tensor(latent[0]), torch.tensor(latent[1])]
-        vutils.save_image(decoded[0],
-                            os.path.join(f"./output/search_analysis/rankings/GOAL_NO GOAL/SEED_{seed}/vae_decoded.png"),
-                            normalize=True)
-        vutils.save_image(frame_preprocessed,
-                            os.path.join(f"./output/search_analysis/rankings/GOAL_NO GOAL/SEED_{seed}/vae_ground_truth.png"),
-                            normalize=True)
-        '''
-
         
         del(frame)
         return torch.tensor(latent).cuda()
@@ -373,8 +329,8 @@ class TargetedSearchAgent():
         self.same_episode_penalty = torch.maximum(self.same_episode_penalty - 1, torch.tensor(0))
 
         # Search for the next trajectory based on the goal and current state
-        possible_trajectories = self.future_goal_distances + self.latent_space_vae.get_distances(latent)
-        #possible_trajectories = self.latent_space_vae.get_distances(latent)
+        #possible_trajectories = self.future_goal_distances + self.latent_space_vae.get_distances(latent)
+        possible_trajectories = self.latent_space_vae.get_distances(latent)
 
         # Saving possible_trajectories at frame 20 to analyze latent space manually
         if flag:

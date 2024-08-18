@@ -14,8 +14,6 @@ from depth_anything.dpt_latent_space import DepthAnythingSpace
 from depth_anything.dpt_decode import DepthAnythingDecoder
 from depth_anything.util.transform import Resize, NormalizeImage, PrepareForNet
 
-os.environ['TRANSFORMERS_CACHE'] = '/media/local/DanielNesterenko/thesis/'
-
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -36,10 +34,10 @@ transform = Compose([
 class DepthAnythingImpl:
     def __init__(self, device='cuda'):
         self.device = device
-        self.depth_anything = DepthAnything.from_pretrained('LiheYoung/depth_anything_{}14'.format('vitl'), cache_dir='/media/local/DanielNesterenko/thesis/').to(device).eval()
-        self.depth_anything_original = DepthAnythingOG.from_pretrained('LiheYoung/depth_anything_{}14'.format('vitl'), cache_dir='/media/local/DanielNesterenko/thesis/').to(device).eval()
-        self.depth_anything_latent_space = DepthAnythingSpace.from_pretrained('LiheYoung/depth_anything_{}14'.format('vitl'), cache_dir='/media/local/DanielNesterenko/thesis/').to(device).eval()
-        self.depth_anything_decode = DepthAnythingDecoder.from_pretrained('LiheYoung/depth_anything_{}14'.format('vitl'), cache_dir='/media/local/DanielNesterenko/thesis/').to(device).eval()
+        self.depth_anything = DepthAnything.from_pretrained('LiheYoung/depth_anything_{}14'.format('vits')).to(device).eval()
+        self.depth_anything_original = DepthAnythingOG.from_pretrained('LiheYoung/depth_anything_{}14'.format('vits')).to(device).eval()
+        self.depth_anything_latent_space = DepthAnythingSpace.from_pretrained('LiheYoung/depth_anything_{}14'.format('vits')).to(device).eval()
+        self.depth_anything_decode = DepthAnythingDecoder.from_pretrained('LiheYoung/depth_anything_{}14'.format('vits')).to(device).eval()
         self.transform = transform
 
 

@@ -1,0 +1,2 @@
+2024-08-18 10:29:23 odoaker process_watcher[115314] INFO Process watcher started between parent 114992 and child 115234 
+2024-08-18 10:34:01 odoaker process_watcher[115314] INFO Child is not running anymore, launcher can terminate.
