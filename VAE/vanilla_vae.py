@@ -1,4 +1,4 @@
-# CODE FROM https://github.com/AntixK/PyTorch-VAE/blob/master/models/vanilla_vae.py
+# CODE FROM https://github.com/AntixK/PyTorch-VAE/blob/master/models/vanilla_vae.py with additional adjustments
 
 import torch
 from VAE.base import BaseVAE

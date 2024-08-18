@@ -11,16 +11,16 @@ from run_agent_rank_analysis_patches import main as run_agent_main
 
 # Specify goals and related seeds: Each goal will be ran on every seed
 goals = ['NO_GOAL']
-seeds = [123, 456, 789]
+seeds = [164]#, 456, 789]
 
 
 def main(args):
 
     os.makedirs(f'{args.output_dir}/', exist_ok=True)
-    os.makedirs(f'{args.output_dir}/search_analysis/', exist_ok=True)
-    os.makedirs(f'{args.output_dir}/search_analysis/agent_recordings', exist_ok=True)
-    os.makedirs(f'{args.output_dir}/search_analysis/rankings', exist_ok=True)
-    os.makedirs(f'{args.output_dir}/search_analysis/logs', exist_ok=True)
+    #os.makedirs(f'{args.output_dir}/search_analysis/', exist_ok=True)
+    #os.makedirs(f'{args.output_dir}/search_analysis/agent_recordings', exist_ok=True)
+    #os.makedirs(f'{args.output_dir}/search_analysis/rankings', exist_ok=True)
+    #os.makedirs(f'{args.output_dir}/search_analysis/logs', exist_ok=True)
 
     for goal in range(len(goals)):
         os.makedirs(f'{args.output_dir}/search_analysis/rankings/GOAL_{goals[goal]}', exist_ok=True)
@@ -31,7 +31,7 @@ def main(args):
             args.goal = goals[goal]
             args.seed = seeds[seed]
 
-            # run agent with current goal and seed -> creates frame comparisons during run.
+            # run agent with current goal and seed -> creates frame comparisons after run.
             run_agent_main(args)
 
 
@@ -44,7 +44,7 @@ if __name__ == "__main__":
     parser.add_argument('--title', type=str, default='recording')
     parser.add_argument('--search-folder', type=str, default='weights/ts_bc/')
     parser.add_argument('--seed', type=int, default=None)
-    parser.add_argument('--max-frames', type=int, default=1*1*40)
+    parser.add_argument('--max-frames', type=int, default=1*1*20)
     parser.add_argument('--goal', type=str, default='gather wood')
     parser.add_argument('--device', type=str, default='cuda')
 

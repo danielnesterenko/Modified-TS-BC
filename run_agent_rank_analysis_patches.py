@@ -94,7 +94,6 @@ def main(args):
         search_ranking_dict[i] = [smallest_20_indices[i], traj_follow_frames, None, round(float(possible_trajectories[smallest_20_indices[i]]), 2)] # rank: start_idx, end_idx, recording_name, dist
     map_found_latents_to_videos(search_ranking_dict, agent.episode_actions.episode_starts)
     calculate_episode_start(search_ranking_dict, agent.episode_actions.episode_starts)
-    #create_recording(args, search_ranking_dict)
 
     search_ranking_dict_largest = {}
     #largest_20_indices = agent.TEST_TOP20 ###TO REMOVE, JUST TESTING MINECLIP PATCH SEARCH
@@ -103,10 +102,7 @@ def main(args):
         search_ranking_dict_largest[i] = [largest_20_indices[i], traj_follow_frames, None, round(float(possible_trajectories[largest_20_indices[i]]), 2)] # rank: start_idx, end_idx, recording_name, dist
     map_found_latents_to_videos(search_ranking_dict_largest, agent.episode_actions.episode_starts)
     calculate_episode_start(search_ranking_dict_largest, agent.episode_actions.episode_starts)
-    #create_recording(args, search_ranking_dict)
-    create_frame_comparison_depth2(args, search_ranking_dict, search_ranking_dict_largest, "EUCLIDEAN")
-    #create_img_from_video(args)
-
+    create_frame_comparison_depth(args, search_ranking_dict, search_ranking_dict_largest, "EUCLIDEAN")
 
     with open(f'{args.output_dir}/frame_comparisons/situational_similarity/logs/programmatic_results.txt', 'w') as f:
         for prog_task in prog_evaluator.prog_values.keys():
@@ -154,13 +150,12 @@ def calculate_episode_start(search_rank_dict, episode_starts):
                 search_rank_dict[entry][1] = int(episode_ending_frame)
         
 
-def create_frame_comparison_depth2(args, lowest, largest, measure):
+def create_frame_comparison_depth(args, lowest, largest, measure):
 
     dataset = VPTDataset()
-    #dataset_midas = VPTDatasetMiDaS()
     dataset_depthAnything = VPTDatasetDepthAnything()
-    agent_recording = skvideo.io.vread(f'{args.output_dir}/search_analysis/agent_recordings/{args.goal}_{args.seed}.mp4')
-    agent_recording_depth = skvideo.io.vread(f'{args.output_dir}/search_analysis/agent_recordings/{args.goal}_{args.seed}_depth.mp4')
+    agent_recording = skvideo.io.vread(f'{args.output_dir}/frame_comparisons/situational_similarity/agent_recordings/{args.goal}_{args.seed}.mp4')
+    agent_recording_depth = skvideo.io.vread(f'{args.output_dir}/frame_comparisons/situational_similarity/agent_recordings/{args.goal}_{args.seed}_depth.mp4')
 
     agent_obs = np.squeeze(agent_recording[19:20])
     cv2.putText(agent_obs, f"Distance Measure: {measure}", (10, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1, cv2.LINE_AA)
@@ -191,7 +186,6 @@ def create_frame_comparison_depth2(args, lowest, largest, measure):
         demonstration_lowest = np.squeeze(vid_lowest[lowest[rank][0]:lowest[rank][0] + 1])
         demonstration_depth_lowest = np.squeeze(vid_depth_lowest[lowest[rank][0]:lowest[rank][0] + 1])
 
-
         # Adding text annotations
         cv2.putText(demonstration, f"Rank: {rank}", (10, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1, cv2.LINE_AA)
         cv2.putText(demonstration, f"Goal: {args.goal}", (10, 40), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1, cv2.LINE_AA)
@@ -207,10 +201,7 @@ def create_frame_comparison_depth2(args, lowest, largest, measure):
         cv2.putText(demonstration_lowest, f"Video: {lowest[rank][2].rsplit('/', 1)[-1]}", (10, 100), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1, cv2.LINE_AA)
         cv2.putText(demonstration_lowest, f"Starting Frame: {lowest[rank][0]}", (10, 120), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1, cv2.LINE_AA)
 
-
-
         demonstration_horizontally = np.hstack((demonstration, demonstration_depth))
-
         demonstration_horizontally_lowest = np.hstack((demonstration_lowest, demonstration_depth_lowest))
         demonstration_horizontally_total = np.hstack((demonstration_horizontally, demonstration_horizontally_lowest))
         demonstration_list.append(demonstration_horizontally_total)
@@ -218,8 +209,7 @@ def create_frame_comparison_depth2(args, lowest, largest, measure):
     # Save the frame as a PNG image
     vertical = np.vstack(demonstration_list)
     horizontal = np.vstack((agent_horizontally_double, vertical))
-    output_path = f'./similarity_output/{args.seed}_{measure}.png'
-    cv2.imwrite(output_path, cv2.cvtColor(horizontal, cv2.COLOR_RGB2BGR))
+    cv2.imwrite(f'output/frame_comparisons/situational_similarity/{args.seed}_{args.goal}.png', cv2.cvtColor(horizontal, cv2.COLOR_RGB2BGR))
 
 
 
@@ -290,72 +280,6 @@ def create_frame_comparison(args, search_ranking_dict):
         # Save the frame as a PNG image
         output_path = f'{args.output_dir}/search_analysis/rankings/GOAL_{args.goal}/SEED_{args.seed}/{rank}_{args.goal}_{args.seed}_{search_ranking_dict[rank][3]}.png'
         cv2.imwrite(output_path, cv2.cvtColor(frame, cv2.COLOR_RGB2BGR))
-
-def create_frame_comparison_depth(args, search_ranking_dict):
-
-    print(f'dict: {search_ranking_dict}')
-
-    dataset = VPTDataset()
-    #dataset_midas = VPTDatasetMiDaS()
-    dataset_depthAnything = VPTDatasetDepthAnything()
-    agent_recording = skvideo.io.vread(f'{args.output_dir}/search_analysis/agent_recordings/{args.goal}_{args.seed}.mp4')
-    agent_recording_depth = skvideo.io.vread(f'{args.output_dir}/search_analysis/agent_recordings/{args.goal}_{args.seed}_depth.mp4')
-
-    #vae_r_gt = cv2.imread(f"./output/search_analysis/rankings/GOAL_NO GOAL/SEED_{args.seed}/vae_ground_truth.png", cv2.IMREAD_UNCHANGED)
-    #vae_r_gt = cv2.cvtColor(vae_r_gt, cv2.COLOR_RGB2BGR)
-    #vae_r_decoded = cv2.imread(f"./output/search_analysis/rankings/GOAL_NO GOAL/SEED_{args.seed}/vae_decoded.png", cv2.IMREAD_UNCHANGED)
-    #vae_r_decoded = cv2.cvtColor(vae_r_decoded, cv2.COLOR_RGB2BGR)
-
-    print(f'### Creating frame comparison for goal: {args.goal}')
-    for rank in tqdm(range(len(search_ranking_dict))):
-        duration_until_goal = 1
-
-        vid, _, _ = dataset.get_from_vid_id(search_ranking_dict[rank][2])
-        dataset_video = np.empty((duration_until_goal, 360, 640, 3), dtype=np.uint8)
-        dataset_video[0:duration_until_goal] = vid[search_ranking_dict[rank][0]:search_ranking_dict[rank][0] + 1]
-
-        vid_depth, _, _ = dataset_depthAnything.get_from_vid_id('dataset/' + search_ranking_dict[rank][2])
-        dataset_video_depth = np.empty((duration_until_goal, 360, 640, 3), dtype=np.uint8)
-
-        dataset_video_depth[0:duration_until_goal] = vid_depth[search_ranking_dict[rank][0]:search_ranking_dict[rank][0] + 1]
-
-        agent_observation = np.empty((duration_until_goal, 360, 640, 3), dtype=np.uint8)
-        agent_observation_depth = np.empty((duration_until_goal, 360, 640, 3), dtype=np.uint8)
-
-        agent_observation[0] = agent_recording[19:20]
-        agent_observation_depth[0] = agent_recording_depth[19:20]
-
-        #vae_gt = np.expand_dims(cv2.resize(vae_r_gt, (640, 360), interpolation=cv2.INTER_LINEAR), axis=0)
-        #vae_decoded = np.expand_dims(cv2.resize(vae_r_decoded, (640, 360), interpolation=cv2.INTER_LINEAR), axis=0)
-
-        comb_obs_horizontally = np.concatenate([agent_observation, agent_observation_depth], axis=2) # add vae_gt
-        comb_lat_horizontally = np.concatenate([dataset_video, dataset_video_depth], axis=2) # add vae_decoded
-
-        # Combine agent observation and dataset video frames vertically
-        comb_video = np.concatenate([comb_obs_horizontally, comb_lat_horizontally], axis=1)
-
-        # Since duration_until_goal is 1, we only have one frame to work with
-        frame = comb_video[0]
-
-        # Add the text annotations
-        cv2.putText(frame, f"Rank: {rank}", (10, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1, cv2.LINE_AA)
-        cv2.putText(frame, f"Goal: {args.goal}", (10, 40), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1, cv2.LINE_AA)
-        cv2.putText(frame, f"Seed: {args.seed}", (10, 60), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1, cv2.LINE_AA)
-        cv2.putText(frame, f"Distance: {search_ranking_dict[rank][3]}", (10, 80), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1, cv2.LINE_AA)
-        cv2.putText(frame, f"Video: {search_ranking_dict[rank][2].rsplit('/', 1)[-1]}", (10, 100), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1, cv2.LINE_AA)
-        cv2.putText(frame, f"Starting Frame: {search_ranking_dict[rank][0]}", (10, 120), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1, cv2.LINE_AA)
-
-        cv2.putText(frame, f"AGENT OBSERVATION", (10, 350), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1, cv2.LINE_AA)
-        cv2.putText(frame, f"CLOSEST LATENT", (10, 710), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1, cv2.LINE_AA)
-        cv2.putText(frame, f"AGENT OBSERVATION - DEPTH", (650, 350), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1, cv2.LINE_AA)
-        cv2.putText(frame, f"CLOSEST LATENT - DEPTH", (650, 710), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1, cv2.LINE_AA)
-        #cv2.putText(frame, f"VAE - GROUND TRUTH", (1290, 350), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1, cv2.LINE_AA)
-        #cv2.putText(frame, f"VAE - DECODED", (1290, 710), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1, cv2.LINE_AA)
-
-        # Save the frame as a PNG image
-        output_path = f'{args.output_dir}/search_analysis/rankings/GOAL_{args.goal}/SEED_{args.seed}/{rank}_{args.goal}_{args.seed}_{search_ranking_dict[rank][3]}.png'
-        cv2.imwrite(output_path, cv2.cvtColor(frame, cv2.COLOR_RGB2BGR))
-
 
 
 if __name__ == "__main__":
