@@ -1,4 +1,5 @@
-
+dataset/data/10.0/*
+dataset/data/depth_videos/*
 __pycache__
 weights/ts_bc/*
 weights/pretrained_vae
@@ -6,3 +7,4 @@ weights/mineclip
 weights/cvae
 MineCLIP/*/__pycache__
 torchhub/facebookresearch_dinov2_main
+output/*
