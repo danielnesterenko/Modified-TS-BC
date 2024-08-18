@@ -14,7 +14,7 @@ LABEL_TYPE = '.jsonl'
 
 class VPTDatasetDepthAnything(Dataset):
     def __init__(self, index_file='dataset/chop_tree_handpicked_01-20_depth.json', base_dir='dataset/data/depth_videos/', download_all=False):
-        """Dataset class for the videos and actions used for OpenAI's VPT.
+        """Dataset class for the videos and actions used for preprocessed OpenAI's VPT with DepthAnything.
 
         Args:
         index_file: File path to the index file (from VPT's GitHub).

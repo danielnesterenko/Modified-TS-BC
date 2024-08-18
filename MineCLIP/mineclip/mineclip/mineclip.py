@@ -94,12 +94,8 @@ class MineCLIP(VideoRewardBase):
         return self.clip_model.encode_text(text_tokens)
 
     def encode_video(self, videos):
-        #print("USING MODIFIED CLIP VERSION")
-        #print('ENCODE VIDEO')
         output = self.forward_video_features(self.forward_image_features(videos))
-        #print('RETURNING ENCODE VIDEO0 OUTPUT:')
         output, patch_embeddings = output
-        #print(output.shape)
         return output, patch_embeddings
 
     def clamp_logit_scale(self):

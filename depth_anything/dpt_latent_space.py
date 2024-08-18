@@ -159,16 +159,6 @@ class DPT_DINOv2(nn.Module):
         features = self.pretrained.get_intermediate_layers(x, 4, return_class_token=True)
 
         return features
-        
-        '''
-        patch_h, patch_w = h // 14, w // 14
-
-        depth = self.depth_head(features, patch_h, patch_w)
-        depth = F.interpolate(depth, size=(h, w), mode="bilinear", align_corners=True)
-        depth = F.relu(depth)
-
-        return depth.squeeze(1)
-        '''
 
 
 class DepthAnythingSpace(DPT_DINOv2, PyTorchModelHubMixin):

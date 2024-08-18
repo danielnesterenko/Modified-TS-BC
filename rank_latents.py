@@ -17,16 +17,9 @@ seeds = [164]#, 456, 789]
 def main(args):
 
     os.makedirs(f'{args.output_dir}/', exist_ok=True)
-    #os.makedirs(f'{args.output_dir}/search_analysis/', exist_ok=True)
-    #os.makedirs(f'{args.output_dir}/search_analysis/agent_recordings', exist_ok=True)
-    #os.makedirs(f'{args.output_dir}/search_analysis/rankings', exist_ok=True)
-    #os.makedirs(f'{args.output_dir}/search_analysis/logs', exist_ok=True)
 
     for goal in range(len(goals)):
-        os.makedirs(f'{args.output_dir}/search_analysis/rankings/GOAL_{goals[goal]}', exist_ok=True)
         for seed in range(len(seeds)):
-
-            os.makedirs(f'{args.output_dir}/search_analysis/rankings/GOAL_{goals[goal]}/SEED_{seeds[seed]}', exist_ok=True)
         
             args.goal = goals[goal]
             args.seed = seeds[seed]

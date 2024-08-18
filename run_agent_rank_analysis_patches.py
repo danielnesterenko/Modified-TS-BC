@@ -151,7 +151,6 @@ def calculate_episode_start(search_rank_dict, episode_starts):
         
 
 def create_frame_comparison_depth(args, lowest, largest, measure):
-
     dataset = VPTDataset()
     dataset_depthAnything = VPTDatasetDepthAnything()
     agent_recording = skvideo.io.vread(f'{args.output_dir}/frame_comparisons/situational_similarity/agent_recordings/{args.goal}_{args.seed}.mp4')
@@ -210,76 +209,6 @@ def create_frame_comparison_depth(args, lowest, largest, measure):
     vertical = np.vstack(demonstration_list)
     horizontal = np.vstack((agent_horizontally_double, vertical))
     cv2.imwrite(f'output/frame_comparisons/situational_similarity/{args.seed}_{args.goal}.png', cv2.cvtColor(horizontal, cv2.COLOR_RGB2BGR))
-
-
-
-# creates recording with observation used for search
-# displays used params at top
-# bottom shows trajectorie from closest latent found in search until min. distance within sliding window
-def create_recording(args, search_ranking_dict):
-
-    dataset = VPTDataset()
-    agent_recording = skvideo.io.vread(f'{args.output_dir}/search_analysis/agent_recordings/{args.goal}_{args.seed}.mp4')
-
-    print(f'### Creating Video for goal: {args.goal}')
-    for rank in tqdm(range(len(search_ranking_dict))):
-        duration_until_goal = search_ranking_dict[rank][1] - search_ranking_dict[rank][0]
-        vid, _, _ = dataset.get_from_vid_id(search_ranking_dict[rank][2])
-        dataset_video = np.empty((duration_until_goal, 360, 640, 3), dtype=np.uint8)
-        dataset_video[0:duration_until_goal] = vid[search_ranking_dict[rank][0]:search_ranking_dict[rank][1]]
-
-        agent_observation = np.empty((duration_until_goal, 360, 640, 3), dtype=np.uint8)
-        for i in range(duration_until_goal):
-            agent_observation[i] = agent_recording[19:20]
-
-        video_writer = cv2.VideoWriter(f'{args.output_dir}/search_analysis/rankings/GOAL_{args.goal}/SEED_{args.seed}/{rank}_{args.goal}_{args.seed}_{search_ranking_dict[rank][3]}.mp4', cv2.VideoWriter_fourcc(*'mp4v'), 20, (640, 2*360))
-        comb_video = np.concatenate([agent_observation, dataset_video], axis=1)
-
-        for frame in comb_video:
-            cv2.rectangle(dataset_video[i], (0, 0), (300, 100), (0, 0, 0), -1)
-            cv2.putText(frame, f"Rank: {rank}", (10, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1, cv2.LINE_AA)
-            cv2.putText(frame, f"Goal: {args.goal}", (10, 40), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1, cv2.LINE_AA)
-            cv2.putText(frame, f"Seed: {args.seed}", (10, 60), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1, cv2.LINE_AA)
-            cv2.putText(frame, f"Distance: {search_ranking_dict[rank][3]}", (10, 80), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1, cv2.LINE_AA)
-            cv2.putText(frame, f"Video: {search_ranking_dict[rank][2]}", (10, 100), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1, cv2.LINE_AA)
-            cv2.putText(frame, f"Starting Frame: {search_ranking_dict[rank][0]}", (10, 100), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1, cv2.LINE_AA)
-            video_writer.write(cv2.cvtColor(frame, cv2.COLOR_RGB2BGR))
-        video_writer.release()
-
-
-def create_frame_comparison(args, search_ranking_dict):
-
-    dataset = VPTDataset()
-    agent_recording = skvideo.io.vread(f'{args.output_dir}/search_analysis/agent_recordings/{args.goal}_{args.seed}.mp4')
-
-    print(f'### Creating frame comparison for goal: {args.goal}')
-    for rank in tqdm(range(len(search_ranking_dict))):
-        duration_until_goal = 1
-        vid, _, _ = dataset.get_from_vid_id(search_ranking_dict[rank][2])
-        dataset_video = np.empty((duration_until_goal, 360, 640, 3), dtype=np.uint8)
-        dataset_video[0:duration_until_goal] = vid[search_ranking_dict[rank][0]:search_ranking_dict[rank][0] + 1]
-
-        agent_observation = np.empty((duration_until_goal, 360, 640, 3), dtype=np.uint8)
-        for i in range(duration_until_goal):
-            agent_observation[i] = agent_recording[19:20]
-
-        # Combine agent observation and dataset video frames vertically
-        comb_video = np.concatenate([agent_observation, dataset_video], axis=1)
-
-        # Since duration_until_goal is 1, we only have one frame to work with
-        frame = comb_video[0]
-
-        # Add the text annotations
-        cv2.putText(frame, f"Rank: {rank}", (10, 20), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1, cv2.LINE_AA)
-        cv2.putText(frame, f"Goal: {args.goal}", (10, 40), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1, cv2.LINE_AA)
-        cv2.putText(frame, f"Seed: {args.seed}", (10, 60), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1, cv2.LINE_AA)
-        cv2.putText(frame, f"Distance: {search_ranking_dict[rank][3]}", (10, 80), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1, cv2.LINE_AA)
-        cv2.putText(frame, f"Video: {search_ranking_dict[rank][2]}", (10, 100), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1, cv2.LINE_AA)
-        cv2.putText(frame, f"Starting Frame: {search_ranking_dict[rank][0]}", (10, 120), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1, cv2.LINE_AA)
-
-        # Save the frame as a PNG image
-        output_path = f'{args.output_dir}/search_analysis/rankings/GOAL_{args.goal}/SEED_{args.seed}/{rank}_{args.goal}_{args.seed}_{search_ranking_dict[rank][3]}.png'
-        cv2.imwrite(output_path, cv2.cvtColor(frame, cv2.COLOR_RGB2BGR))
 
 
 if __name__ == "__main__":

@@ -1,12 +1,9 @@
-import argparse
 import cv2
 import numpy as np
-import os
 import torch
 import torch.nn.functional as F
 from depth_anything.transforms import Compose
 from tqdm import tqdm
-import sys
 
 from depth_anything.dpt import DepthAnything
 from depth_anything.dpt_original import DepthAnythingOG

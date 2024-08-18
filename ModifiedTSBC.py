@@ -33,13 +33,13 @@ class TargetedSearchAgent():
         self.max_clip_follow_frames = 100
         self.trigger_execution_phase = False
         self.clip_follow_counter = -1
-        self.count_clip_searches = 0 #just needed for frame_comparison
+        self.count_clip_searches = 0 # Only needed for frame_comparison
         self.clip_sim_threshold = 0.7
 
 
         self.redo_search_counter = 0  # TODO better name?
         self.redo_search_threshold = 3
-        self.diff_threshold = 300000 #150.0 #90.0  # TODO which number? #Euclidean: 300
+        self.diff_threshold = 300000 # adjust threshold here
 
         self.diff_log = []
         self.search_log = []
@@ -83,12 +83,8 @@ class TargetedSearchAgent():
         text_latent = self.mineclip_model.encode_text(self.current_goal) # encode goal text prompt
         vis_text_latent = self.cvae_model(text_latent) # transform encoded text goal to a 'visual encoding' that can be represented in mineCLIP latent space
         self.goal_distances = self.latent_space_mineclip.get_distances(vis_text_latent[0].detach()) # get distances between all latents of mineCLIP's indexed space and the 'visual encoding' based on the goal text prompt
-        #self.goal_distances = self.latent_space_mineclip.get_distances(text_latent[0].detach()) # get distances between all latents of mineCLIP's indexed space and the 'visual encoding' based on the goal text prompt
         self.latent_space_mineclip.min_distances, self.latent_space_mineclip.min_indices = torch.topk(self.goal_distances, 50, largest=False)
-        print(self.latent_space_mineclip.min_indices)
-
-        #print(self.latent_space_mineclip.min_distances)
-        #print(self.latent_space_mineclip.min_indices)
+        print(f'Goal indices: {self.latent_space_mineclip.min_indices}')
         self.latent_space_mineclip.get_goal_patch_mask()
         
         goal_distances_padding = F.pad(self.goal_distances, (0, self.goal_rolling_window_size-1), 'constant', float('inf'))
@@ -297,7 +293,6 @@ class TargetedSearchAgent():
     
     
     def get_latent(self, frame):
-        #frame = self.preprocess(frame, 256)
         frame = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
         frame_preprocessed = VAE.preprocess_img(frame)
 
@@ -330,7 +325,6 @@ class TargetedSearchAgent():
 
         # Search for the next trajectory based on the goal and current state
         possible_trajectories = self.future_goal_distances + self.latent_space_vae.get_distances(latent)
-        #possible_trajectories = self.latent_space_vae.get_distances(latent)
 
         # Saving possible_trajectories at frame 20 to analyze latent space manually
         if flag:

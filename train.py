@@ -13,6 +13,11 @@ from LatentSpaceDepthVAE import LatentSpaceDepthVAE
 def main(args):
     print('Computing Latent Vectors...')
 
+    os.makedirs(f'./weights/ts_bc/', exist_ok=True)
+    os.makedirs(f'./weights/ts_bc/actions', exist_ok=True)
+    os.makedirs(f'./weights/ts_bc/latents_4x4x8_128', exist_ok=True)
+    os.makedirs(f'./weights/ts_bc/latents_mineclip_patches', exist_ok=True)
+
     rgb_dataset = VPTDataset()
     depth_dataset = VPTDatasetDepthAnything()
 

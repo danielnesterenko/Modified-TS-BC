@@ -10,10 +10,8 @@ import os
 from PIL import Image
 import sys
 import cv2
-#from VAE2 import VAE
 from VAE.vanilla_vae import VanillaVAE
 
-# UNCOMMENT IF TRAINING OF NEED DATA
 import sys
 sys.path.append('../')  # Add the parent directory to the Python path
 from VPTDatasetDepthAnything import VPTDatasetDepthAnything

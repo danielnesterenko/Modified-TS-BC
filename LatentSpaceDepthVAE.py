@@ -9,14 +9,9 @@ import torchvision.transforms as transforms
 
 from gym3.types import DictType
 from distance_fns import DISTANCE_FUNCTIONS
-#from LatentSpaceMineCLIP import SLIDING_WINDOW_SIZE
 
 import sys
 sys.path.append('openai_vpt')
-
-
-#sys.path.append('../')  # Add the parent directory to the Python path
-#from VAE import VAE
 
 AGENT_RESOLUTION = (216, 384)
 
