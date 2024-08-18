@@ -43,7 +43,7 @@ and is for academic purposes only.
 
 ## Run the Agent
 * Model has only been ran on headless machines. The following instructions therefore are for headless machines only. Removing the prefix `xvfb-run -a` might enable the model to run on a machine with head.
-* Run the agent on goals & seeds defined within `run_batch_analysis.py` by `xvfb-run -a python run_batch_analysis.py`. After finishing, its video footage will be placed inside output/agent_recordings.
+* Run the agent on goals & seeds defined within `run_batch.py` by `xvfb-run -a python run_batch.py`. After finishing, its video footage will be placed inside output/agent_recordings.
 * To make frame comparisons based on the VAE-embedding space run `xvfb-run -a python rank_latents.py`. After finishing, the results will be placed inside output/frame_comparisons/situational_similarity.
 
 
