@@ -1,14 +1,14 @@
 # Modified TS-BC
-Modified TS-BC is a modification of the Targeted Search-Based Behavioral Cloning model for playing Minecraft.
+Modified TS-BC is a modification of the [Targeted Search-Based Behavioral Cloning](https://pages.github.com/]https://github.com/JulianBvW/TS-BC) model for playing Minecraft.
 It looks for the most similar situation in relation to a prompted goal between the agent and a demonstration dataset, by comparing embeddings of different embedding spaces.
 
 See [thesis_presentation_modified_tsbc.pptx](https://github.com/user-attachments/files/16648347/thesis_presentation_modified_tsbc.pptx) for additional information.
 
 
 ## Disclaimer
-This project is a modification of [TS-BC](https://pages.github.com/]https://github.com/JulianBvW/TS-BC).
 
 It utilizes parts of the following projects:
+* [TS-BC](https://pages.github.com/]https://github.com/JulianBvW/TS-BC).
 * [MineCLIP](https://github.com/MineDojo/MineDojo)
 * [MineRL](https://github.com/minerllabs/minerl)
 * [STEVE-1](https://github.com/Shalev-Lifshitz/STEVE-1)
