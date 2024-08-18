@@ -39,7 +39,6 @@ and is for academic purposes only.
 ## Indexing of the Embedding Space
 
 * Run train.py with the new conda environment enabled (this process may take 2-3 hours based on your device):
-* `conda activate m-tsbc`
 * `python train.py`
 
 ## Run the Agent
