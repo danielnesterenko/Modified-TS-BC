@@ -25,6 +25,7 @@ and is for academic purposes only.
 * `pip install pip==21 setuptools==65.5.0 importlib-resources==1.3`
 * `pip install torch torchvision torchaudio opencv-python tqdm numpy==1.23.5 pandas scikit-video`
 * `pip install gym==0.21.0 gym3 attrs`
+* `pip install huggingface-hub==0.23.2`
 * `pip install git+https://github.com/minerllabs/minerl`
 * `pip install git+https://github.com/MineDojo/MineCLIP`
 4. Download the following weights and data, and put inside the correct directories:
