@@ -1,13 +1,16 @@
 # Modified TS-BC
 Modified TS-BC is a modification of the Targeted Search-Based Behavioral Cloning model for playing Minecraft.
+It looks for the most similar situation in relation to a prompted goal between the agent and a demonstration dataset, by comparing embeddings of different embedding spaces
 
 ## Disclaimer
-This project is a modification of [TS-BC]([https://pages.github.com/]https://github.com/JulianBvW/TS-BC).
+This project is a modification of [TS-BC](https://pages.github.com/]https://github.com/JulianBvW/TS-BC).
 
 It utilizes parts of the following projects:
-* STEVE-1: https://github.com/Shalev-Lifshitz/STEVE-1
-* DepthAnything: https://github.com/LiheYoung/Depth-Anything
-* DINOv2: https://github.com/facebookresearch/dinov2
+* [MineCLIP](https://github.com/MineDojo/MineDojo)
+* [MineRL](https://github.com/minerllabs/minerl)
+* [STEVE-1](https://github.com/Shalev-Lifshitz/STEVE-1)
+* [DepthAnything](https://github.com/LiheYoung/Depth-Anything)
+* [DINOv2](https://github.com/facebookresearch/dinov2)
 
 and is for academic reasons only.
 
@@ -22,12 +25,19 @@ and is for academic reasons only.
 * `pip install git+https://github.com/minerllabs/minerl`
 * `pip install git+https://github.com/MineDojo/MineCLIP`
 4. Download the following weights and data and put inside the correct directories:
-* Download 'attn.pth' from https://drive.google.com/file/d/1uaZM1ZLBz2dZWcn85rZmjP7LV6Sg5PZW/view and move into weights/mineclip
-* Download 'steve1_prior.pt' from https://drive.google.com/uc?id=1OdX5wiybK8jALVfP5_dEo0CWm9BQbDES and move into weights/cvae
-* Download 'model_vid10000_4x4x8.pth' from https://drive.google.com/uc?export=download&id=1588qzaRGNvQWsibVBDdp_9zA8VFHd4wE and move into weights/pretrained_vae
-* Download the directory 'data' from https://drive.google.com/drive/folders/1WdzwLzmUilVKSt6sYVvSZQLoy2FPHhk0?usp=sharing and move it into dataset/
-* Download the directory 'facebookresearch_dinov2_main' from https://drive.google.com/drive/folders/1lp5mSZWSDg0Ca7ebJmujK5YdH-NDSgZc?usp=sharing and move it into torchhub/
+* Download [attn.pth](https://drive.google.com/file/d/1uaZM1ZLBz2dZWcn85rZmjP7LV6Sg5PZW/view) and move into weights/mineclip
+* Download [steve1_prior.pt](https://drive.google.com/uc?id=1OdX5wiybK8jALVfP5_dEo0CWm9BQbDES) and move into weights/cvae
+* Download [model_vid10000_4x4x8.pth](https://drive.google.com/uc?export=download&id=1588qzaRGNvQWsibVBDdp_9zA8VFHd4wE) and move into weights/pretrained_vae
+* Download the directory [data](https://drive.google.com/drive/folders/1WdzwLzmUilVKSt6sYVvSZQLoy2FPHhk0?usp=sharing) and move it into dataset/
+* Download the directory [facebookresearch_dinov2_main](https://drive.google.com/drive/folders/1lp5mSZWSDg0Ca7ebJmujK5YdH-NDSgZc?usp=sharing) and move it into torchhub/
 
-## Indexing the Embedding Space
+## Indexing of the Embedding Space
 
-* Run train.py with the new conda environment enabled.
+* Run train.py with the new conda environment enabled (this process may take 2-3 hours based on your device):
+* `conda activate m-tsbc`
+* `python train.py`
+
+## Run the Agent
+* Model has only been ran on headless machines. The following instructions therefore are for headless machines only. Removing the prefix `xvfb-run -a` might enable the model to run on a machine with head.
+* Run the agent on goals & seeds defined within `run_batch_analysis.py` by `xvfb-run -a python run_batch_analysis.py`. After finishing its video footage will be placed inside output/agent_recordings.
+* To make frame comparisons based on the VAE-embedding space run `xvfb-run -a python rank_latents.py`. After finishing the results will be placed inside output/frame_comparisons/situational_similarity.
