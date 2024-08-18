@@ -1,4 +1,4 @@
-name: ts-bc
+name: m-ts-bc
 channels:
   - defaults
 dependencies:
