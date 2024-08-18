@@ -1,6 +1,6 @@
 # Modified TS-BC
-Modified TS-BC is a modification of the [Targeted Search-Based Behavioral Cloning](https://pages.github.com/]https://github.com/JulianBvW/TS-BC) model for playing Minecraft.
-It looks for the most similar situation in relation to a prompted goal between the agent and a demonstration dataset by comparing embeddings of different embedding spaces.
+Modified TS-BC is a modification of the [Targeted Search-Based Behavioral Cloning](https://pages.github.com/]https://github.com/JulianBvW/TS-BC) model and built on top of its code base.
+This model implements a Minecraft AI Agent based on ideas derived from the papers [Zero-shot Imitation Policy via Search in Demonstration Dataset](https://ieeexplore.ieee.org/abstract/document/10447339/) and [STEVE-1: A Generative Model for Text-to-Behavior in Minecraft](https://arxiv.org/abs/2306.00937).
 
 See [thesis_presentation_modified_tsbc.pptx](https://github.com/user-attachments/files/16648347/thesis_presentation_modified_tsbc.pptx) for additional information.
 
