@@ -15,7 +15,7 @@ It utilizes parts of the following projects:
 * [DepthAnything](https://github.com/LiheYoung/Depth-Anything)
 * [DINOv2](https://github.com/facebookresearch/dinov2)
 
-and is for academic reasons only.
+and is for academic purposes only.
 
 ## Installation
 
