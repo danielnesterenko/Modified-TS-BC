@@ -35,6 +35,7 @@ and is for academic purposes only.
 * Download [model_vid10000_4x4x8.pth](https://drive.google.com/uc?export=download&id=1588qzaRGNvQWsibVBDdp_9zA8VFHd4wE) and move into weights/pretrained_vae
 * Download the directory [data](https://drive.google.com/drive/folders/1WdzwLzmUilVKSt6sYVvSZQLoy2FPHhk0?usp=sharing) and move it into dataset/
 * Download the directory [facebookresearch_dinov2_main](https://drive.google.com/drive/folders/1lp5mSZWSDg0Ca7ebJmujK5YdH-NDSgZc?usp=sharing) and move it into torchhub/
+* **Make sure that the individual names of the files / directories match the ones above.**
 
 ## Indexing of the Embedding Space
 
