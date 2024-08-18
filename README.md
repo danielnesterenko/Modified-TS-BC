@@ -48,8 +48,8 @@ and is for academic purposes only.
 
 ## Expected Results
 
-* VAE similarity search, displaying the demonstrations of lowest (left) and highest similarity (right) based on the observation (top): ![523_good](https://github.com/user-attachments/assets/ba286e2a-c18b-4d4b-b77c-4c62cdfb656f)
-* Screencapture of moment where agent (left) switches from navigation to execution mode based on demonstration (right) patch embeddings similarity: 
+VAE similarity search, displaying the demonstrations of lowest (left) and highest similarity (right) based on the observation (top): ![523_good](https://github.com/user-attachments/assets/ba286e2a-c18b-4d4b-b77c-4c62cdfb656f)
+Screencapture of moment where agent (left) switches from navigation to execution mode based on demonstration (right) patch embeddings similarity: 
 ![Figure23](https://github.com/user-attachments/assets/120d52bb-8eae-419d-b548-f556e1cd7f6d)
 
 
