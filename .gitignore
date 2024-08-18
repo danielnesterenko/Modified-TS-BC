@@ -1,0 +1,7 @@
+dataset/*
+__pycache__
+weights/ts_bc/*
+weights/pretrained_vae
+weights/mineclip
+weights/cvae
+MineCLIP/*/__pycache__

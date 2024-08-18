@@ -1,4 +1,5 @@
 import os
+import sys
 import json
 import requests
 import skvideo.io
@@ -12,7 +13,7 @@ VIDEO_TYPE = '.mp4'
 LABEL_TYPE = '.jsonl'
 
 class VPTDatasetDepthAnything(Dataset):
-    def __init__(self, index_file='dataset/chop_tree_handpicked_01-20_midas.json', base_dir='DepthAnything/output/greyscaled/', download_all=False):
+    def __init__(self, index_file='dataset/chop_tree_handpicked_01-20_depth.json', base_dir='dataset/data/depth_videos/', download_all=False):
         """Dataset class for the videos and actions used for OpenAI's VPT.
 
         Args:
@@ -84,19 +85,6 @@ class VPTDatasetDepthAnything(Dataset):
             if self.data[idx] == vid_id.split('/')[-1]:
                 return self[idx]
         return None, None, None
-
-    def get_random(self):
-        idx = np.random.randint(len(self))
-        video, actions, vid_id = self[idx]
-
-        if video is None or len(video) <= 100:
-            return self.get_random_and_delete() # replaced return self.get_random_and_delete()
-
-        return video, actions, vid_id
-
-    def get_random_and_delete():
-        delete(vid_id)
-        get_random()
 
 
     def delete(self, vid_id):

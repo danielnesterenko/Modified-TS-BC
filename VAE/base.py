@@ -1,4 +1,5 @@
-from z_types_ import *
+# CODE FROM https://github.com/AntixK/PyTorch-VAE/blob/master/models/vanilla_vae.py
+from VAE.types_ import *
 from torch import nn
 from abc import abstractmethod
 

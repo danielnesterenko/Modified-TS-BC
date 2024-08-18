@@ -1,23 +1,21 @@
 import os
 import argparse
+import sys
 from tqdm import tqdm
 
+from VAE.build_latent_space_vae import build_latent_space
 from VPTDataset import VPTDataset
 from VPTDatasetDepthAnything import VPTDatasetDepthAnything
 from EpisodeActions import EpisodeActions
 #from LatentSpaceVPT import LatentSpaceVPT, load_vpt
 from LatentSpaceMineCLIP_test_patches import LatentSpaceMineCLIP, load_mineclip
+from LatentSpaceDepthVAE import LatentSpaceDepthVAE
 
 def main(args):
     print('Computing Latent Vectors...')
 
-    save_dir = args.save_dir
-    #os.makedirs(save_dir + '/actions/', exist_ok=True)
-    #os.makedirs(save_dir + '/latents_vpt/', exist_ok=True)
-    #os.makedirs(save_dir + '/latents_mineclip/', exist_ok=True)
-
     rgb_dataset = VPTDataset()
-    depth_dataset = VPTDatasetDepthAnything
+    depth_dataset = VPTDatasetDepthAnything()
 
     episode_actions = EpisodeActions()
     #latent_space_vpt = LatentSpaceVPT() not needed?
@@ -34,6 +32,7 @@ def main(args):
             if idx >= len(rgb_dataset):
                 break
             frames, actions, vid_id = rgb_dataset[idx]
+            depth_frames, _, depth_vid_id = depth_dataset[idx]
         else:
             frames, actions, vid_id = rgb_dataset.get_random()
 
@@ -41,17 +40,18 @@ def main(args):
             print(f'SKIPPING index: {idx}')
             continue
 
-        episode_actions.train_episode(actions, vid_id, save_dir=save_dir + '/actions/')
+        episode_actions.train_episode(actions, vid_id)
         #latent_space_vpt.train_episode(vpt_model, frames, vid_id, save_dir=save_dir + '/latents_vpt/')
-        latent_space_mineclip.train_episode(mineclip_model, frames, vid_id)
+        build_latent_space(depth_frames, depth_vid_id) # Building VAE embedding space
+        latent_space_mineclip.train_episode(mineclip_model, frames, vid_id) # Building MineCLIP + Patch embeddings embedding space
+        
 
-        #dataset.delete(vid_id)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     
     parser.add_argument('--random-sample-size', type=int, default=None)
-    parser.add_argument('--batch-size', type=int, default=400)
+    parser.add_argument('--batch-size', type=int, default=20)
     parser.add_argument('--batch-idx', type=int, default=0)
     args = parser.parse_args()
 

@@ -9,36 +9,26 @@ import torchvision.transforms as transforms
 
 from gym3.types import DictType
 from distance_fns import DISTANCE_FUNCTIONS
-from LatentSpaceMineCLIP import SLIDING_WINDOW_SIZE
+#from LatentSpaceMineCLIP import SLIDING_WINDOW_SIZE
 
 import sys
 sys.path.append('openai_vpt')
-from openai_vpt.lib.policy import MinecraftAgentPolicy
 
 
 #sys.path.append('../')  # Add the parent directory to the Python path
-from VAE import VAE
+#from VAE import VAE
 
 AGENT_RESOLUTION = (216, 384)
-#WEIGHTS = torch.load("./VAE/vae_training/vae_model_y.pth")
-
 
 class LatentSpaceDepthVAE:
     def __init__(self, distance_fn='euclidean', device='cuda'):
         self.latents = []  # Python List while training, Numpy array while inference
         self.distance_function = DISTANCE_FUNCTIONS[distance_fn]
         self.device = device
-        self.vae_model = VAE().to(device)
-        #self.vae_model.load_state_dict(WEIGHTS)
-        self.vae_model.eval()
-        self.transform = transforms.Compose([
-            transforms.ToTensor(),
-            transforms.Resize((216, 384))
-        ])
 
     
     @torch.no_grad()
-    def load(self, episode_actions, latents_folder='weights/ts_bc/latents_vae_depthAnything_withoutStd/'):
+    def load(self, episode_actions, latents_folder='weights/ts_bc/latents_4x4x8_128/'):
         for vid_id, _ in episode_actions.episode_starts:
             _, name = vid_id.rsplit('/', 1)
             vid_latents = np.load(latents_folder + name + '.npy', allow_pickle=True)

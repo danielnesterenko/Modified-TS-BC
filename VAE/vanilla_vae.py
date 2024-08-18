@@ -1,10 +1,10 @@
 # CODE FROM https://github.com/AntixK/PyTorch-VAE/blob/master/models/vanilla_vae.py
 
 import torch
-from z_base import BaseVAE
+from VAE.base import BaseVAE
 from torch import nn
 from torch.nn import functional as F
-from z_types_ import *
+from VAE.types_ import *
 
 
 class VanillaVAE(BaseVAE):

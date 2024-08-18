@@ -443,9 +443,3 @@ class TargetedSearchAgent():
         frames_ret.append(frame_tensor)
         video_tensor = torch.stack(frames_ret)
         return video_tensor.to(self.device)
-
-    @torch.no_grad()
-    def encode_frame(self, batch):
-        _, mu, logvar = self.latent_space_vae.vae_model(batch)
-        latent_batch = self.latent_space_vae.vae_model.reparameterize(mu, logvar)
-        return latent_batch

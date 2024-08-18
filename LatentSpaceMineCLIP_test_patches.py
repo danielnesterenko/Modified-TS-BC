@@ -1,5 +1,6 @@
 import cv2
 import torch
+from tqdm import tqdm
 import sys
 import numpy as np
 from numpy.lib.stride_tricks import sliding_window_view
@@ -142,8 +143,9 @@ class LatentSpaceMineCLIP:
         sliding_window_frames = sliding_window_view(resized_frames, SLIDING_WINDOW_SIZE, 0)
         sliding_window_frames = torch.tensor(np.transpose(sliding_window_frames, (0, 4, 3, 2, 1)))
 
-        inter_batch_size = 1
-        for i in range(sliding_window_frames.shape[0] // inter_batch_size + 1):
+        inter_batch_size = 10
+        print('### Proceeding with encoding MineCLIP and patch embeddings for video.')
+        for i in tqdm(range(sliding_window_frames.shape[0] // inter_batch_size + 1)):
             inter_batch_frames = sliding_window_frames[i*inter_batch_size:(i+1)*inter_batch_size].to(self.device)
 
             latents = mineclip_model.encode_video(inter_batch_frames)
@@ -159,9 +161,6 @@ class LatentSpaceMineCLIP:
                 latent_to_save = latents[j]
                 patch_embedding_to_save = latent_patch_embeddings[emb_idx_16[j]]
                 episode_latents.append((latent_to_save, patch_embedding_to_save))
-
-            if i % 100 == 0:
-                print(f'{i} batches encoded')
             
             del(inter_batch_frames)
 

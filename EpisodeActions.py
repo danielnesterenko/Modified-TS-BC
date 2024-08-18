@@ -4,8 +4,8 @@ import random
 import numpy as np
 
 from util import to_minerl_action
-from LatentSpaceMineCLIP import SLIDING_WINDOW_SIZE
 
+SLIDING_WINDOW_SIZE = 16
 class EpisodeActions:
     def __init__(self):
         self.actions = []         # Python List while training, Numpy array while inference
@@ -59,14 +59,14 @@ class EpisodeActions:
         np.save(episode_starts_file, episode_starts)
 
     @torch.no_grad()
-    def train_episode(self, actions, vid_id, save_dir='weights/ts_bc/actions/'):
+    def train_episode(self, actions, vid_id):
         episode_actions = []
 
         for ts in range(SLIDING_WINDOW_SIZE-1, len(actions)):  # Start at Frame 15 because of MineCLIP needing 16-frame batches
             episode_actions.append(to_minerl_action(actions[ts]))
 
         episode_actions.append(to_minerl_action(None))  # Append Null Action for last frame
-        np.save(save_dir + vid_id.rsplit('/', 1)[-1], np.array(episode_actions))
+        np.save("weights/ts_bc/actions/" + vid_id.rsplit('/', 1)[-1], np.array(episode_actions))
 
     def is_last(self, idx):
         return str(idx + 1) in self.episode_starts[:, 1] or idx + 1 >= len(self.actions)

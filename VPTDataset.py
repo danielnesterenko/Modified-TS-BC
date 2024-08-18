@@ -1,4 +1,5 @@
 import os
+import sys
 import json
 import requests
 import skvideo.io
@@ -28,6 +29,9 @@ class VPTDataset(Dataset):
 
         self.base_dir = base_dir
         self.data_dir = self.base_dir + self.data[0].rsplit('/', 1)[0]
+
+        print(self.base_dir + self.data[0])
+        #sys.exit()
 
         os.makedirs(os.path.dirname(self.base_dir + self.data[0]), exist_ok=True)
 
@@ -88,14 +92,7 @@ class VPTDataset(Dataset):
         idx = np.random.randint(len(self))
         video, actions, vid_id = self[idx]
 
-        if video is None or len(video) <= 100:
-            return self.get_random_and_delete() # replaced return self.get_random_and_delete()
-
         return video, actions, vid_id
-
-    def get_random_and_delete():
-        delete(vid_id)
-        get_random()
 
 
     def delete(self, vid_id):
