@@ -2,7 +2,7 @@ dataset/data/10.0/*
 dataset/data/depth_videos/*
 __pycache__
 weights/ts_bc/*
-weights/pretrained_vae
+weights/pretrained_vae/model_vid10000_2_4x4x8.pth
 weights/mineclip
 weights/cvae
 MineCLIP/*/__pycache__

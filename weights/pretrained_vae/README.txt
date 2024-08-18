@@ -1,0 +1,1 @@
+Download 'model_vid10000_2_4x4x8.pth' from https://drive.google.com/drive/u/0/folders/1Cl7QkvRkNnwZ9szKZwkppZTAl5P19YJU and put inside this folder.
