@@ -1,6 +1,6 @@
 # Modified TS-BC
 Modified TS-BC is a modification of the [Targeted Search-Based Behavioral Cloning](https://pages.github.com/]https://github.com/JulianBvW/TS-BC) model for playing Minecraft.
-It looks for the most similar situation in relation to a prompted goal between the agent and a demonstration dataset, by comparing embeddings of different embedding spaces.
+It looks for the most similar situation in relation to a prompted goal between the agent and a demonstration dataset by comparing embeddings of different embedding spaces.
 
 See [thesis_presentation_modified_tsbc.pptx](https://github.com/user-attachments/files/16648347/thesis_presentation_modified_tsbc.pptx) for additional information.
 
@@ -27,7 +27,7 @@ and is for academic purposes only.
 * `pip install gym==0.21.0 gym3 attrs`
 * `pip install git+https://github.com/minerllabs/minerl`
 * `pip install git+https://github.com/MineDojo/MineCLIP`
-4. Download the following weights and data and put inside the correct directories:
+4. Download the following weights and data, and put inside the correct directories:
 * Download [attn.pth](https://drive.google.com/file/d/1uaZM1ZLBz2dZWcn85rZmjP7LV6Sg5PZW/view) and move into weights/mineclip
 * Download [steve1_prior.pt](https://drive.google.com/uc?id=1OdX5wiybK8jALVfP5_dEo0CWm9BQbDES) and move into weights/cvae
 * Download [model_vid10000_4x4x8.pth](https://drive.google.com/uc?export=download&id=1588qzaRGNvQWsibVBDdp_9zA8VFHd4wE) and move into weights/pretrained_vae
